@@ -42,33 +42,26 @@ jobs:
             ${{ github.workspace }}\cmake-3.24.0-windows-x86_64\bin;^
             gcc --version &&^
             cd OpenCOLLADA &&^
+            mkdir temp &&^
+            cd temp &&^
             cmake.exe --debug-output -G "MinGW Makefiles" ^
             -DCMAKE_BUILD_TYPE=Release ^
-            -DBUILD_CXXLIBS=ON ^
-            -DBUILD_PROGRAMS=OFF ^
-            -DBUILD_EXAMPLES=OFF ^
-            -DBUILD_TESTING=OFF ^
-            -DBUILD_DOCS=OFF ^
-            -DWITH_FORTIFY_SOURCE=ON ^
-            -DWITH_STACK_PROTECTOR=ON ^
-            -DINSTALL_MANPAGES=OFF ^
-            -DINSTALL_PKGCONFIG_MODULES=ON ^
-            -DINSTALL_CMAKE_CONFIG_MODULE=ON ^
-            -DWITH_OGG=OFF ^
+            -DUSE_STATIC=ON ^
+            -DUSE_SHARED=OFF ^
             -DBUILD_SHARED_LIBS=OFF ^
-            -DCMAKE_INSTALL_PREFIX="cmake-build/${{ env.cmakeInstallationPath }}" -B./cmake-build &&^
+            -DCMAKE_INSTALL_PREFIX="cmake-build/${{ env.cmakeInstallationPath }}" -B./cmake-build .. &&^
             cd cmake-build && cmake --build --verbose . && cmake --install . 
             
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: "OpenCOLLADA/cmake-build/${{ env.cmakeInstallationPath }}"
+          directory: "OpenCOLLADA/temp/cmake-build/${{ env.cmakeInstallationPath }}"
           filename: "${{ env.mingwTargetZip }}"
           
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "OpenCOLLADA/cmake-build/${{ env.cmakeInstallationPath }}/${{ env.mingwTargetZip }}"
+          artifacts: "OpenCOLLADA/temp/cmake-build/${{ env.cmakeInstallationPath }}/${{ env.mingwTargetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
