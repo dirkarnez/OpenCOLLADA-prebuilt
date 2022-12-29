@@ -44,13 +44,13 @@ jobs:
             cd OpenCOLLADA &&^
             mkdir temp &&^
             cd temp &&^
-            cmake.exe --debug-output -G "MinGW Makefiles" ^
+            (cmake.exe --debug-output -G "MinGW Makefiles" ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DUSE_STATIC=ON ^
             -DUSE_SHARED=OFF ^
             -DBUILD_SHARED_LIBS=OFF ^
             -DCMAKE_INSTALL_PREFIX="cmake-build/${{ env.cmakeInstallationPath }}" -B./cmake-build .. &&^
-            cd cmake-build && cmake --build --verbose . && cmake --install . 
+            cd cmake-build && cmake --build --verbose . && cmake --install . ) || type .\cmake-build\CMakeFiles\CMakeOutput.log
             
       - name: Archive Release
         uses: thedoctor0/zip-release@master
