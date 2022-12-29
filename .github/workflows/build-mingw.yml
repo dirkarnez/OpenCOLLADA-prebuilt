@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Create Release
-    runs-on: windows-2019
+    runs-on: windows-latest
     env:
       libraryName: OpenCOLLADA
       cmakeInstallationPath: OpenCOLLADA-installation
@@ -42,7 +42,7 @@ jobs:
             ${{ github.workspace }}\cmake-3.24.0-windows-x86_64\bin;^
             gcc --version &&^
             cd OpenCOLLADA &&^
-            cmake.exe -G "MinGW Makefiles" ^
+            cmake.exe --debug-output -G "MinGW Makefiles" ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DBUILD_CXXLIBS=ON ^
             -DBUILD_PROGRAMS=OFF ^
@@ -57,7 +57,7 @@ jobs:
             -DWITH_OGG=OFF ^
             -DBUILD_SHARED_LIBS=OFF ^
             -DCMAKE_INSTALL_PREFIX="cmake-build/${{ env.cmakeInstallationPath }}" -B./cmake-build &&^
-            cd cmake-build && cmake --build . && cmake --install . 
+            cd cmake-build && cmake --build --verbose . && cmake --install . 
             
       - name: Archive Release
         uses: thedoctor0/zip-release@master
